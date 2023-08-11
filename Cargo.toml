@@ -9,3 +9,5 @@ edition = "2021"
 rand="*"
 clap="*"
 serde_json = "1.0.104"
+actix-web = "4.3.1"
+tokio = { version = "1.30.0", features = ["full"] }
