@@ -1,8 +1,11 @@
+use serde::ser::{Serialize, SerializeStruct, Serializer};
 use std::fmt;
+#[derive(Clone)]
 pub enum TaskStatus {
     DONE,
     PENDING,
 }
+
 
 impl TaskStatus {
     pub fn stringify(&self) -> String {
@@ -29,5 +32,16 @@ impl fmt::Display for TaskStatus {
                 write!(f, "PENDING")
             }
         }
+    }
+}
+
+impl Serialize for TaskStatus {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("TaskStatus", 1)?;
+        s.serialize_field("status", &self.stringify())?;
+        s.end()
     }
 }

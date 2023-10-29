@@ -1,9 +1,12 @@
+mod json_serialization;
 mod processes;
 mod state;
 mod todo;
 mod views;
+mod jwt;
 
 use actix_web::{web, App, HttpRequest, HttpServer, Responder};
+use actix_service::Service;
 use serde_json::{value::Value, Map};
 use state::read_file;
 use std::env;
@@ -16,7 +19,16 @@ use crate::processes::process_input;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        let app = App::new().configure(views::views_factory);
+        let app = App::new()
+        .wrap_fn(|req, srv|{
+            println!("{:?}", req);
+            let future =  srv.call(req);
+            async {
+                let result =  future.await?;
+                Ok(result)
+            }
+        })
+        .configure(views::views_factory);
         return app;
     })
     .bind("127.0.0.1:8000")?
