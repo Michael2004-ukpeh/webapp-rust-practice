@@ -14,3 +14,9 @@ tokio = { version = "1.30.0", features = ["full"] }
 serde = { version = "1.0.189", features = ["derive"] }
 actix-service = "2.0.2"
 futures = "0.3.29"
+diesel = { version = "2.1.4", features = ["postgres", "chrono", "r2d2"] }
+dotenv = "0.15.0"
+actix-cors = "0.6.4"
+chrono = "0.4.31"
+serde_yaml = "0.9.27"
+lazy_static = "1.4.0"
