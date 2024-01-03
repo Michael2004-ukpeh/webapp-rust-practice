@@ -5,7 +5,7 @@ use serde::Serialize;
 
 use std::vec::Vec;
 
-use crate::database::establish_connection;
+use crate::database::{establish_connection, DBCONNECTION};
 use crate::models::item::item::Item;
 use crate::schema::todo;
 
@@ -43,12 +43,13 @@ impl ToDoItems {
         };
     }
 
-    pub fn get_state() -> ToDoItems {
-        let mut connection =  establish_connection();
+    pub fn get_state(user_id:i32) -> ToDoItems {
+        let mut connection =   DBCONNECTION.db_connection.get()
+        .unwrap();
         // let state: Map<String, Value> = read_file("./state.json");
-        let mut array_buffer = Vec::new();
-        let items = todo::table.order(todo::columns::id.asc()).load::<Item>(&mut connection).unwrap();
-
+     
+        let items = todo::table.filter(todo::columns::user_id.eq(&user_id)).order(todo::columns::id.asc()).load::<Item>(&mut connection).unwrap();
+        let mut array_buffer = Vec::with_capacity(items.len());
         for item in items {
             let status = TaskStatus::from_string(item.status.as_str().to_string());
             let item = todo_factory(&item.title, status);
