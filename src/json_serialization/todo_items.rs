@@ -1,6 +1,6 @@
 use crate::diesel;
-use diesel::{prelude::*};
 use actix_web::{body::BoxBody, http::header::ContentType, HttpRequest, HttpResponse, Responder};
+use diesel::prelude::*;
 use serde::Serialize;
 
 use std::vec::Vec;
@@ -43,12 +43,15 @@ impl ToDoItems {
         };
     }
 
-    pub fn get_state(user_id:i32) -> ToDoItems {
-        let mut connection =   DBCONNECTION.db_connection.get()
-        .unwrap();
+    pub fn get_state(user_id: i32) -> ToDoItems {
+        let mut connection = DBCONNECTION.db_connection.get().unwrap();
         // let state: Map<String, Value> = read_file("./state.json");
-     
-        let items = todo::table.filter(todo::columns::user_id.eq(&user_id)).order(todo::columns::id.asc()).load::<Item>(&mut connection).unwrap();
+
+        let items = todo::table
+            .filter(todo::columns::user_id.eq(&user_id))
+            .order(todo::columns::id.asc())
+            .load::<Item>(&mut connection)
+            .unwrap();
         let mut array_buffer = Vec::with_capacity(items.len());
         for item in items {
             let status = TaskStatus::from_string(item.status.as_str().to_string());
@@ -68,4 +71,3 @@ impl Responder for ToDoItems {
             .body(body)
     }
 }
-

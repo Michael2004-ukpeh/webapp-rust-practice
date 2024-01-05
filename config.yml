@@ -1,2 +1,4 @@
 DB_URL: postgres://postgres:postgres@localhost/todo
 SECRET_KEY: secret
+EXPIRE_MINUTES: 120
+REDIS_URL: redis://127.0.0.1/

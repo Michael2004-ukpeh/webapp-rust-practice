@@ -6,7 +6,6 @@ pub enum TaskStatus {
     PENDING,
 }
 
-
 impl TaskStatus {
     pub fn stringify(&self) -> String {
         match &self {
